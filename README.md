@@ -96,8 +96,7 @@ File: metrics/examples/processes.txt
 - MLFQ shows slightly better response time for low-priority processes
 
 ![alt text](img/image-1.png)
-![alt text](img/imagecc.png)
-
+![alt text](img/imageccc.png)
 
 ![alt text](img/image-1c.png)
 ![alt text](img/imagec.png)
