@@ -1,6 +1,7 @@
 # CPU Scheduling
 
 **Authors**: Julieta Flores y Antonio Zarco
+
 **Course**: Operating Systems
 
 ## Overview
