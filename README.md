@@ -89,11 +89,11 @@ We analyzed both schedulers using the metrics notebook with different process se
 - MLQ performs better overall for this  process set
 
 
-![alt text](imagenes/image.png)
+![alt text](img/image.png)
 
 - MLFQ shows slightly better response time for low-priority processes
 
-![alt text](imagenes/image-1.png)
+![alt text](img/image-1.png)
 
 ## Test Set 2: Large Varied Process Set
 
