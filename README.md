@@ -89,35 +89,41 @@ We analyzed both schedulers using the metrics notebook with different process se
 - MLQ performs better overall for this  process set
 
 
-![alt text](image.png)
+![alt text](imagenes/image.png)
 
 - MLFQ shows slightly better response time for low-priority processes
 
-![alt text](image-1.png)
+![alt text](imagenes/image-1.png)
 
 ## Test Set 2: Large Varied Process Set
 
-Analyzing a larger dataset with diverse priorities (1-5) and burst times (1-100) reveals the true strengths of each algorithm:
+Analyzing a larger dataset with diverse priorities (1-5), arrival times (0-200) and burst times (1-100) reveals the true strengths of each algorithm:
+
+
 
 **Average Metrics:**
 
 | Metric | MLQ | MLFQ |
 |--------|-----|------|
-| Waiting Time | 2380.07 | 2838.66 |
-| Turnaround Time | 2428.56 | 2887.15 |
-| Response Time | 1610.70 | 374.79 |
+| Waiting Time | 2578.28 | 2971.02 |
+| Turnaround Time | 2627.42 | 3020.16 |
+| Response Time | 1895.50 | 383.06 |
+
+
 
 **Key Findings:**
-- **MLFQ excels at response time** (374.79 vs 1610.70) - significantly better for interactive processes
+- **MLFQ excels at response time** (383.06 vs 11895.50) - significantly better for interactive processes
 - **MLQ excels at waiting/turnaround times** - better for batch processing
 - MLFQ's aging mechanism prevents starvation but the domotion increases overall waiting time
 - MLQ's priority orientation helps long high priority proccess to have better metrics
 
 
+![alt text](img/image10.png)
 
-![alt text](image-2.png)
 
-![alt text](image-3.png)
+![alt text](img/image-11.png)
+
+![alt text](img/image-21.png)
 
 ## Conclusions
 
@@ -142,6 +148,6 @@ Analyzing a larger dataset with diverse priorities (1-5) and burst times (1-100)
 
 ## References
 
-Operating System Concepts 10th Ed "ABRAHAM SILBERSCHATZ P E T E R BAER GALVIN GREG GAGNE"
+Operating System Concepts 10th Ed "ABRAHAM SILBERSCHATZ PETER BAER GALVIN GREG GAGNE"
 
 

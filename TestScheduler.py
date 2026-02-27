@@ -28,7 +28,7 @@ def write_timeline(timeline, name):
         timeline (list): A list representing the execution timeline of processes, where each entry is either a Process ID or "Idle".
         name (str): The base name for the output CSV file.
     """
-    with open(f"{name}_timeline.csv", "w") as f:
+    with open(f"metrics/{name}_timeline.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerow(["Time", "Process"])
         for time, proc in enumerate(timeline):
@@ -42,7 +42,7 @@ def write_metrics(processes, name):
         processes (list): A list of Process objects, each containing metrics such as arrival time, burst time, priority, start time, finish time, waiting time, turnaround time, and response time.
         name (str): The base name for the output CSV file.
     """
-    with open(f"{name}_metrics.csv", "w") as f:
+    with open(f"metrics/{name}_metrics.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerow(["Process ID", "Arrival", "Burst", "Priority", "Start Time", "Finish Time", "Waiting Time", "Turnaround Time", "Response Time"])
         for p in processes:
@@ -56,7 +56,7 @@ def write_summary(context_switches, name):
         context_switches (int): Total number of context switches.
         name (str): The base name for the output CSV file.
     """
-    with open(f"{name}_summary.csv", "w") as f:
+    with open(f"metrics/{name}_summary.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerow(["Metric", "Value"])
         writer.writerow(["Total Context Switches", context_switches])
