@@ -67,9 +67,9 @@ Visualize results (.csv) in jupyter notebook `metrics.ipynb`
 ## Output Files
 
 Each scheduler generates 3 CSV files:
-- **timeline**: Process execution timeline with queue assignments
-- **metrics**: Per-process metrics (turnaround, waiting, response times)
-- **summary**: Aggregate metrics. Only includes total context switches
+- **metrics/[alg]_timeline**: Process execution timeline with queue assignments
+- **metrics/[alg]_metrics**: Per-process metrics (turnaround, waiting, response times)
+- **metrics/[alg]_summary**: Aggregate metrics. Only includes total context switches
 
 # Comparison
 
@@ -98,6 +98,7 @@ File: metrics/examples/processes.txt
 ![alt text](img/image-1.png)
 ![alt text](img/imageccc.png)
 
+Execution order:
 ![alt text](img/image-1c.png)
 ![alt text](img/imagec.png)
 
@@ -129,6 +130,7 @@ File: metrics/examples/processes_random.txt
 ![alt text](img/image-3a.png)
 
 
+Execution order:
 ![alt text](img/imagea.png)
 ![alt text](img/image-1a.png)
 ## Conclusions
