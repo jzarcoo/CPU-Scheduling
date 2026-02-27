@@ -96,6 +96,11 @@ File: metrics/examples/processes.txt
 - MLFQ shows slightly better response time for low-priority processes
 
 ![alt text](img/image-1.png)
+![alt text](img/imagecc.png)
+
+
+![alt text](img/image-1c.png)
+![alt text](img/imagec.png)
 
 
 ## Test Set 2: Large Varied Process Set
@@ -119,6 +124,7 @@ File: metrics/examples/processes_random.txt
 - MLFQ's aging mechanism prevents starvation but the domotion increases overall waiting time
 - MLQ's priority orientation helps long high priority proccess to have better metrics
 
+![alt text](img/imageaa.png)
 ![alt text](img/image-2a.png)
 ![alt text](img/imagea.png)
 ![alt text](img/image-1a.png)
