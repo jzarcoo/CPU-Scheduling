@@ -1,13 +1,13 @@
 from collections import deque
-from Process import Process
-from Scheduler import Scheduler
+from MultilevelQueueBase import MultilevelQueueBase
 
-class MLFQ(Scheduler):
+class MLFQ(MultilevelQueueBase):
     """
     Multilevel Feedback Queue (MLFQ) scheduling algorithm implementation. 
     This scheduler divides processes into three queues based on their priority levels 
     and schedules them using round-robin in the first two queues and FCFS in the last queue.
     
+    - Processes are assigned to queues based on their priority, with the range of priorities divided into three equal parts.
     - Processes can move between queues based on their behavior (e.g., if they use up their time quantum).
     - Aging is implemented to prevent starvation of lower priority processes.
     - Higher priority processes can preempt lower priority ones.
@@ -25,34 +25,22 @@ class MLFQ(Scheduler):
         current (Process): The currently executing process.
         current_queue (int): The index of the queue from which the current process was selected.
         quantum_counter (int): Counter for tracking the time spent on the current process for round-robin scheduling.
+        num_queues (int): Number of queues (default: 3).
     """
     
-    def __init__(self, time_quantum_q1, time_quantum_q2, aging_threshold):
+    def __init__(self, time_quantum_q1, time_quantum_q2, aging_threshold, num_queues=3):
         """
         Initializes the MLFQ scheduler with a specified time quantum.
         Args:
             time_quantum_q1 (int): The time quantum for round-robin scheduling in queue 1.
             time_quantum_q2 (int): The time quantum for round-robin scheduling in queue 2.
             aging_threshold (int): The threshold time after which a process is aged up.
+            num_queues (int): Number of queues (default: 3).
         """
+        self.num_queues = num_queues
         self.time_quantum_q1 = time_quantum_q1
         self.time_quantum_q2 = time_quantum_q2
         self.aging_threshold = aging_threshold
-
-    def _assign_queue(self, priority):
-        """
-        Determines the queue index for a process based on its priority.
-        Args:            
-            priority (int): The priority level of the process.
-        Returns:            
-            int: The index of the queue to which the process should be assigned.
-        """
-        if priority < self.priority_step:
-            return 0
-        elif priority < 2 * self.priority_step:
-            return 1
-        else:
-            return 2
 
     def _process_arrivals_preemptive(self):
         """
@@ -76,7 +64,7 @@ class MLFQ(Scheduler):
         """
         Implements aging by promoting processes that have been waiting for a long time in lower priority queues to higher priority queues.
         """
-        for idx in range(1, 3):
+        for idx in range(1, self.num_queues):
             for _ in range(len(self.queues[idx])):
                 proc = self.queues[idx].popleft()
                 if self.time - self.waiting_since.get(proc.id, proc.arrival) >= self.aging_threshold:
@@ -84,19 +72,6 @@ class MLFQ(Scheduler):
                     self.waiting_since[proc.id] = self.time
                 else:
                     self.queues[idx].append(proc)
-            
-    def _select_next_process(self):
-        """
-        Selects the next process to execute from the highest priority non-empty queue.
-        """
-        for idx in range(3):
-            if self.queues[idx]:
-                self.current = self.queues[idx].popleft()
-                self.current_queue = idx
-                self.quantum_counter = 0
-                if self.current.start_time is None:
-                    self.current.start_time = self.time
-                break
 
     def _execute_current_process(self):
         """
@@ -119,24 +94,18 @@ class MLFQ(Scheduler):
             self.waiting_since[self.current.id] = self.time + 1
             self.current = None
 
+
     def run(self, processes):
         """
         Runs the MLFQ scheduling algorithm on the given list of processes.
         Args:
             processes (list): A list of Process objects to be scheduled.
         Returns:
-            list: A timeline of process execution, where each entry is a Process ID or "Idle".
+            list: A timeline of process execution.
         """
-        self.processes = sorted(processes, key=lambda p: p.arrival)
-        self.priority_step = max(p.priority for p in self.processes) // 3 + 1
-        self.timeline = []
-        self.time = 0
-        self.i = 0
-        self.queues = [deque() for _ in range(3)]
-        self.current = None
-        self.current_queue = -1
-        self.quantum_counter = 0
+        self._initialize_state(processes)
         self.waiting_since = {}
+        prev_process = None
         
         while self.i < len(self.processes) or any(self.queues) or self.current:
             self._process_arrivals_preemptive()
@@ -144,8 +113,13 @@ class MLFQ(Scheduler):
             if not self.current:
                 self._select_next_process()
             if self.current:
+                if prev_process is not None and prev_process != self.current:
+                    self.context_switches += 1
                 self._execute_current_process()
+                prev_process = self.current
             else:
                 self.timeline.append("Idle")
+                prev_process = None
             self.time += 1
+        
         return self.timeline

@@ -14,6 +14,7 @@ class Process:
         waiting_time (int): Total waiting time of the process (initially 0).
         turnaround (int): Total turnaround time of the process (initially 0).
         response_time (int): Time from arrival to first execution (initially None).
+        context_switches (int): Number of times the process was context switched (initially 0).
     """
 
     def __init__(self, id, arrival, burst, priority):

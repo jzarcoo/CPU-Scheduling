@@ -48,15 +48,31 @@ def write_metrics(processes, name):
         for p in processes:
             writer.writerow([f"P{p.id}", p.arrival, p.burst, p.priority, p.start_time, p.finish_time, p.waiting_time, p.turnaround, p.response_time])
 
+def write_summary(context_switches, name):
+    """
+    Writes summary statistics to a CSV file.
+
+    Args:
+        context_switches (int): Total number of context switches.
+        name (str): The base name for the output CSV file.
+    """
+    with open(f"{name}_summary.csv", "w") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Metric", "Value"])
+        writer.writerow(["Total Context Switches", context_switches])
+
 def main():
     processes = read_processes()
-
+    if processes == []:
+        print("No processes given")
+        return
     time_quantum = 8
     scheduler = MLQ(time_quantum)
     processes_copy = deepcopy(processes)
     timeline = scheduler.run(processes_copy)
     write_timeline(timeline, "mlq")
     write_metrics(processes_copy, "mlq")
+    write_summary(scheduler.context_switches, "mlq")
 
     time_quantum_q1 = 8
     time_quantum_q2 = 16
@@ -66,6 +82,8 @@ def main():
     timeline_mlfq = scheduler_mlfq.run(processes_copy)
     write_timeline(timeline_mlfq, "mlfq")
     write_metrics(processes_copy, "mlfq")
+    write_summary(scheduler_mlfq.context_switches, "mlfq")
 
+    print("All schedulers completed successfully. View results in metrics.ipynb")
 if __name__ == "__main__":
     main()
