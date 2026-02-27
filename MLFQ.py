@@ -65,8 +65,10 @@ class MLFQ(Scheduler):
             proc = self.processes[self.i]
             queue_index = self._assign_queue(proc.priority)
             self.queues[queue_index].append(proc)
+            self.waiting_since[proc.id] = self.time
             if self.current and queue_index < self.current_queue:
                 self.queues[self.current_queue].appendleft(self.current)
+                self.waiting_since[self.current.id] = self.time
                 self.current = None
             self.i += 1
 
@@ -77,8 +79,9 @@ class MLFQ(Scheduler):
         for idx in range(1, 3):
             for _ in range(len(self.queues[idx])):
                 proc = self.queues[idx].popleft()
-                if self.time - proc.arrival >= self.aging_threshold:
+                if self.time - self.waiting_since.get(proc.id, proc.arrival) >= self.aging_threshold:
                     self.queues[idx - 1].append(proc)
+                    self.waiting_since[proc.id] = self.time
                 else:
                     self.queues[idx].append(proc)
             
@@ -109,12 +112,14 @@ class MLFQ(Scheduler):
         if self.current.remaining == 0:
             self.current.finish_time = self.time + 1
             self.current.calculate_metrics()
+            self.waiting_since.pop(self.current.id, None)
             self.current = None
         elif (self.current_queue == 0 and self.quantum_counter == self.time_quantum_q1) or (self.current_queue == 1 and self.quantum_counter == self.time_quantum_q2):
             if self.current_queue < 2:
                 self.queues[self.current_queue + 1].append(self.current)
             else:
                 self.queues[self.current_queue].append(self.current)
+            self.waiting_since[self.current.id] = self.time + 1
             self.current = None
 
     def run(self, processes):
@@ -134,6 +139,7 @@ class MLFQ(Scheduler):
         self.current = None
         self.current_queue = -1
         self.quantum_counter = 0
+        self.waiting_since = {}
         
         while self.i < len(self.processes) or any(self.queues) or self.current:
             self._process_arrivals_preemptive()

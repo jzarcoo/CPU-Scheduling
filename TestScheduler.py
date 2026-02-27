@@ -60,7 +60,7 @@ def main():
 
     time_quantum_q1 = 8
     time_quantum_q2 = 16
-    aging_threshold = 20
+    aging_threshold = 100
     processes_copy = deepcopy(processes)
     scheduler_mlfq = MLFQ(time_quantum_q1, time_quantum_q2, aging_threshold)
     timeline_mlfq = scheduler_mlfq.run(processes_copy)
