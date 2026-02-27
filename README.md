@@ -115,7 +115,7 @@ File: metrics/examples/processes_random.txt
 | Turnaround Time | 2627.42 | 3020.16 |
 | Response Time | 1895.50 | 383.06 |
 
-
+![alt text](img/imageaa.png)
 
 **Key Findings:**
 - **MLFQ excels at response time** (383.06 vs 11895.50) - significantly better for interactive processes
@@ -123,12 +123,14 @@ File: metrics/examples/processes_random.txt
 - MLFQ's aging mechanism prevents starvation but the domotion increases overall waiting time
 - MLQ's priority orientation helps long high priority proccess to have better metrics
 
-![alt text](img/imageaa.png)
+
 ![alt text](img/image-2a.png)
-![alt text](img/imagea.png)
-![alt text](img/image-1a.png)
+
 ![alt text](img/image-3a.png)
 
+
+![alt text](img/imagea.png)
+![alt text](img/image-1a.png)
 ## Conclusions
 
 ### Performance Trade-offs
