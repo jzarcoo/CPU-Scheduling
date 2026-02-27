@@ -10,6 +10,7 @@ class MLQ(Scheduler):
     
     - Processes are assigned to queues based on their priority, with the range of priorities divided into three equal parts.
     - Processes cannot move between queues once assigned, but they can be preempted by higher priority processes.
+    - Quantum for queue i is time_quantum * (2^i), meaning higher priority queues have shorter quantums.
 
     Attributes:
         time_quantum (int): The time quantum for round-robin scheduling within each queue.
@@ -88,7 +89,8 @@ class MLQ(Scheduler):
             self.current.finish_time = self.time + 1
             self.current.calculate_metrics()
             self.current = None
-        elif self.quantum_counter == self.time_quantum:
+        # Lower quantum for higher priority queues
+        elif self.quantum_counter == self.time_quantum * (2 ** self.current_queue):
             self.queues[self.current_queue].append(self.current)
             self.current = None
 
