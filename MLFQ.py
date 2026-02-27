@@ -115,10 +115,7 @@ class MLFQ(Scheduler):
             self.waiting_since.pop(self.current.id, None)
             self.current = None
         elif (self.current_queue == 0 and self.quantum_counter == self.time_quantum_q1) or (self.current_queue == 1 and self.quantum_counter == self.time_quantum_q2):
-            if self.current_queue < 2:
-                self.queues[self.current_queue + 1].append(self.current)
-            else:
-                self.queues[self.current_queue].append(self.current)
+            self.queues[self.current_queue + 1].append(self.current)
             self.waiting_since[self.current.id] = self.time + 1
             self.current = None
 
