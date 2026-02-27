@@ -77,6 +77,8 @@ We analyzed both schedulers using the metrics notebook with different process se
 
 ## Test Set 1: Small Uniform Process Set
 
+File: metrics/examples/processes.txt
+
 **Average Metrics:**
 
 | Metric | MLQ | MLFQ |
@@ -95,11 +97,11 @@ We analyzed both schedulers using the metrics notebook with different process se
 
 ![alt text](img/image-1.png)
 
+
 ## Test Set 2: Large Varied Process Set
 
 Analyzing a larger dataset with diverse priorities (1-5), arrival times (0-200) and burst times (1-100) reveals the true strengths of each algorithm:
-
-
+File: metrics/examples/processes_random.txt
 
 **Average Metrics:**
 
@@ -117,13 +119,10 @@ Analyzing a larger dataset with diverse priorities (1-5), arrival times (0-200) 
 - MLFQ's aging mechanism prevents starvation but the domotion increases overall waiting time
 - MLQ's priority orientation helps long high priority proccess to have better metrics
 
-
-![alt text](img/image10.png)
-
-
-![alt text](img/image-11.png)
-
-![alt text](img/image-21.png)
+![alt text](img/image-2a.png)
+![alt text](img/imagea.png)
+![alt text](img/image-1a.png)
+![alt text](img/image-3a.png)
 
 ## Conclusions
 

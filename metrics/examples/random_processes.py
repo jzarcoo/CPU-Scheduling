@@ -5,10 +5,12 @@ num_processes = 100
 processes = []
 
 for i in range(1, num_processes + 1):
-    arrival = random.randint(0, 300)  
+    arrival = random.randint(0, 200)
     burst = random.randint(1, 100)  
     priority = random.randint(1, 5) 
     processes.append(f"{i} {arrival} {burst} {priority}")
+
+processes.sort(key=lambda x: int(x.split()[1]))  # Sort by arrival time
 
 # Write to file
 with open('processes_random.txt', 'w') as f:
