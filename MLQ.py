@@ -48,6 +48,7 @@ class MLQ(MultilevelQueueBase):
             self.queues[queue_index].append(proc)
             if self.current and proc.priority < self.current.priority:
                 self.queues[self.current_queue].appendleft(self.current)
+                self.context_switches += 1
                 self.current = None
             self.i += 1
 
@@ -77,21 +78,15 @@ class MLQ(MultilevelQueueBase):
         Returns:
             list: A timeline of process execution.
         """
-        self._initialize_state(processes)
-        prev_process = None
-        
+        self._initialize_state(processes) 
         while self.i < len(self.processes) or any(self.queues) or self.current:
             self._process_arrivals_preemptive()
             if not self.current:
                 self._select_next_process()
             if self.current:
-                if prev_process is not None and prev_process != self.current:
-                    self.context_switches += 1
                 self._execute_current_process()
-                prev_process = self.current
             else:
                 self.timeline.append("Idle")
-                prev_process = None
             self.time += 1
         
         return self.timeline

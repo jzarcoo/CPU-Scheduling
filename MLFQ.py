@@ -57,6 +57,7 @@ class MLFQ(MultilevelQueueBase):
             if self.current and queue_index < self.current_queue:
                 self.queues[self.current_queue].appendleft(self.current)
                 self.waiting_since[self.current.id] = self.time
+                self.context_switches += 1
                 self.current = None
             self.i += 1
 
@@ -105,7 +106,7 @@ class MLFQ(MultilevelQueueBase):
         """
         self._initialize_state(processes)
         self.waiting_since = {}
-        prev_process = None
+        
         
         while self.i < len(self.processes) or any(self.queues) or self.current:
             self._process_arrivals_preemptive()
@@ -113,13 +114,10 @@ class MLFQ(MultilevelQueueBase):
             if not self.current:
                 self._select_next_process()
             if self.current:
-                if prev_process is not None and prev_process != self.current:
-                    self.context_switches += 1
+                
                 self._execute_current_process()
-                prev_process = self.current
             else:
                 self.timeline.append("Idle")
-                prev_process = None
             self.time += 1
         
         return self.timeline

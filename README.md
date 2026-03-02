@@ -1,57 +1,57 @@
-# CPU Scheduling
+# Planificación de CPU
 
-**Authors**: Julieta Flores y Antonio Zarco
+**Autores**: Julieta Flores y Antonio Zarco
 
-**Course**: Operating Systems
+**Curso**: Sistemas Operativos
 
-## Overview
+## Descripción General
 
-### 1. Multilevel Feedback Queue (MLFQ)
+### 1. Cola Multinivel con Retroalimentación (MLFQ)
 
-This scheduler divides processes into three queues based on their priority levels. Each queue uses a **time quantum** (similar to Round-Robin) for the first two queues and *FCFS* for the last queue.
+Este planificador divide los procesos en tres colas basándose en sus niveles de prioridad. Cada cola utiliza un **quantum de tiempo** (similar a Round-Robin) para las primeras dos colas y *FCFS* para la última cola.
 
-- Each queue has total priority over the next one
-- Processes can **move** between queues based on their behavior:
-  - **Demotion**: If a process uses its full time quantum, it moves to a lower priority queue
-  - **Promotion (Aging)**: If a process waits too long, it moves to a higher priority queue to prevent starvation
-- Higher priority processes can **preempt** lower priority ones.
+- Cada cola tiene prioridad total sobre la siguiente
+- Los procesos pueden **moverse** entre colas según su comportamiento:
+  - **Degradación**: Si un proceso usa todo su quantum de tiempo, se mueve a una cola de menor prioridad
+  - **Promoción (Envejecimiento)**: Si un proceso espera demasiado tiempo, se mueve a una cola de mayor prioridad para prevenir inanición
+- Los procesos de mayor prioridad pueden **interrumpir** a los de menor prioridad.
 
-#### Design: 
-- **Number of queues**: 3 queues by default (configurable)
-- **Scheduling algorithm for each queue**: 
-  - q0: Round-Robin-like with time quantum = 8 (demotes to q1 after quantum expires)
-  - q1: Round-Robin-like with time quantum = 16 (demotes to q2 after quantum expires)
+#### Diseño: 
+- **Número de colas**: 3 colas por defecto (configurable)
+- **Algoritmo de planificación para cada cola**: 
+  - q0: Similar a Round-Robin con quantum de tiempo = 8 (degrada a q1 después de que expira el quantum)
+  - q1: Similar a Round-Robin con quantum de tiempo = 16 (degrada a q2 después de que expira el quantum)
   - q2: FCFS 
-- **Promotion (Aging)**: A process that waits longer than 100 time units in a lower priority queue is promoted to a higher priority queue
-- **Demotion**: If a process exhausts its time quantum without completing, it is demoted to the next lower priority queue
-- **Initial queue assignment**: Processes enter queues based on their priority values. The range from 0 to the maximum priority value is divided into equal parts among the queues. Lower priority values (higher priority processes) are assigned to q0, and higher priority values (lower priority processes) are assigned to q2
+- **Promoción (Envejecimiento)**: Un proceso que espera más de 100 unidades de tiempo en una cola de menor prioridad es promovido a una cola de mayor prioridad
+- **Degradación**: Si un proceso agota su quantum de tiempo sin completarse, es degradado a la siguiente cola de menor prioridad
+- **Asignación inicial de cola**: Los procesos entran a las colas según sus valores de prioridad. El rango desde 0 hasta el valor máximo de prioridad se divide en partes iguales entre las colas. Los valores de prioridad más bajos (procesos de mayor prioridad) se asignan a q0, y los valores de prioridad más altos (procesos de menor prioridad) se asignan a q2
 
 
-### 2. Multilevel Queue (MLQ)
+### 2. Cola Multinivel (MLQ)
 
-This scheduler divides processes into three queues based on their priority levels and schedules them using *Round-Robin* within each queue.
+Este planificador divide los procesos en tres colas basándose en sus niveles de prioridad y los planifica usando *Round-Robin* dentro de cada cola.
 
-- Processes **cannot move** between queues once assigned, but they can be **preempted** by higher priority processes.
-- Quantum for queue $i$ is time_quantum $\cdot (2^i)$, meaning higher priority queues have shorter quantums.
+- Los procesos **no pueden moverse** entre colas una vez asignados, pero pueden ser **interrumpidos** por procesos de mayor prioridad.
+- El quantum para la cola $i$ es quantum_tiempo $\cdot (2^i)$, lo que significa que las colas de mayor prioridad tienen quantums más cortos.
 
-#### Design:
-- **Number of queues**: 3 queues by default (configurable)
-- **Scheduling algorithm for each queue**: Round-Robin with exponentially increasing time quantums:
-  - q0: Round-Robin with time quantum = 8 
-  - q1: Round-Robin with time quantum = 16 
-  - q2: Round-Robin with time quantum = 32 
-- **Initial queue assignment**: Processes enter queues based on their priority values. The range from 0 to the maximum priority value is divided into equal parts among the queues. Lower priority values (higher priority processes) are assigned to q0, and higher priority values (lower priority processes) are assigned to q2
+#### Diseño:
+- **Número de colas**: 3 colas por defecto (configurable)
+- **Algoritmo de planificación para cada cola**: Round-Robin con quantums de tiempo que aumentan exponencialmente:
+  - q0: Round-Robin con quantum de tiempo = 8 
+  - q1: Round-Robin con quantum de tiempo = 16 
+  - q2: Round-Robin con quantum de tiempo = 32 
+- **Asignación inicial de cola**: Los procesos entran a las colas según sus valores de prioridad. El rango desde 0 hasta el valor máximo de prioridad se divide en partes iguales entre las colas. Los valores de prioridad más bajos (procesos de mayor prioridad) se asignan a q0, y los valores de prioridad más altos (procesos de menor prioridad) se asignan a q2
 
-## Structure:
+## Estructura:
 
-- **Process.py**: Process class with attributes and calculated metrics 
-- **MultilevelQueueBase.py**: Abstract base class with common methods for queue scheduler implementations
-- **MLFQ.py**: Multilevel Feedback Queue scheduler implementation
-- **MLQ.py**: Multilevel Queue scheduler implementation
-- **TestScheduler.py**: Test harness that runs both schedulers and generates CSV output files
+- **Process.py**: Clase Process con atributos y métricas calculadas 
+- **MultilevelQueueBase.py**: Clase base abstracta con métodos comunes para implementaciones de planificadores de colas
+- **MLFQ.py**: Implementación del planificador de Cola Multinivel con Retroalimentación
+- **MLQ.py**: Implementación del planificador de Cola Multinivel
+- **TestScheduler.py**: Arnés de pruebas que ejecuta ambos planificadores y genera archivos CSV de salida
 
 
-## Installation
+## Instalación
 
 
 ```shell
@@ -62,100 +62,101 @@ pip install -r requirements.txt
 python TestScheduler.py < processes.txt
 ```
 
-Visualize results (.csv) in jupyter notebook `metrics.ipynb`
+Visualiza los resultados (.csv) en el notebook de jupyter `metrics.ipynb`
 
-## Output Files
+## Archivos de Salida
 
-Each scheduler generates 3 CSV files:
-- **metrics/[alg]_timeline**: Process execution timeline with queue assignments
-- **metrics/[alg]_metrics**: Per-process metrics (turnaround, waiting, response times)
-- **metrics/[alg]_summary**: Aggregate metrics. Only includes total context switches
+Cada planificador genera 3 archivos CSV:
+- **metrics/[alg]_timeline**: Línea de tiempo de ejecución de procesos con asignaciones de cola
+- **metrics/[alg]_metrics**: Métricas por proceso (tiempo de retorno, espera, respuesta)
+- **metrics/[alg]_summary**: Métricas agregadas. Solo incluye el total de cambios de contexto
 
-# Comparison
+# Comparación
 
-We analyzed both schedulers using the metrics notebook with different process sets to understand their performance characteristics.
+Analizamos ambos planificadores usando el notebook de métricas con diferentes conjuntos de procesos para entender sus características de rendimiento.
 
-## Test Set 1: Small Uniform Process Set
+## Conjunto de Prueba 1: Conjunto Pequeño de Procesos Uniformes
 
-File: metrics/examples/processes.txt
+Archivo: metrics/examples/processes.txt
 
-**Average Metrics:**
+**Métricas Promedio:**
 
-| Metric | MLQ | MLFQ |
-|--------|-----|------|
-| Waiting Time | 134.80 | 161.38 |
-| Turnaround Time | 140.80 | 167.38 |
-| Response Time | 134.56 | 135.98 |
+| Métrica | MLQ | MLFQ |
+|---------|-----|------|
+| Tiempo de Espera | 134.80 | 161.38 |
+| Tiempo de Retorno | 140.80 | 167.38 |
+| Tiempo de Respuesta | 134.56 | 135.98 |
 
-**Key Findings:**
-- MLQ performs better overall for this  process set
-
-
-![alt text](img/image.png)
-
-- MLFQ shows slightly better response time for low-priority processes
-
-![alt text](img/image-1.png)
-![alt text](img/imageccc.png)
-
-Execution order:
-![alt text](img/image-1c.png)
-![alt text](img/imagec.png)
+**Hallazgos Clave:**
+- MLQ tiene mejor rendimiento general para este conjunto de procesos
 
 
-## Test Set 2: Large Varied Process Set
+![texto alternativo](img/image.png)
+![alt text](img/image1q.png)
+![alt text](img/image-11q.png)
+- MLFQ muestra un tiempo de respuesta ligeramente mejor para procesos de baja prioridad
 
-Analyzing a larger dataset with diverse priorities (1-5), arrival times (0-200) and burst times (1-100) reveals the true strengths of each algorithm:
-File: metrics/examples/processes_random.txt
+![texto alternativo](img/image-1.png)
+![texto alternativo](img/imageccc.png)
 
-**Average Metrics:**
-
-| Metric | MLQ | MLFQ |
-|--------|-----|------|
-| Waiting Time | 2578.28 | 2971.02 |
-| Turnaround Time | 2627.42 | 3020.16 |
-| Response Time | 1895.50 | 383.06 |
-
-![alt text](img/imageaa.png)
-
-**Key Findings:**
-- **MLFQ excels at response time** (383.06 vs 11895.50) - significantly better for interactive processes
-- **MLQ excels at waiting/turnaround times** - better for batch processing
-- MLFQ's aging mechanism prevents starvation but the domotion increases overall waiting time
-- MLQ's priority orientation helps long high priority proccess to have better metrics
+Orden de ejecución:
+![texto alternativo](img/image-1c.png)
+![texto alternativo](img/imagec.png)
 
 
-![alt text](img/image-2a.png)
+## Conjunto de Prueba 2: Conjunto Grande de Procesos Variados
 
-![alt text](img/image-3a.png)
+Analizar un conjunto de datos más grande con prioridades diversas (1-5), tiempos de llegada (0-200) y tiempos de ráfaga (1-100) revela las verdaderas fortalezas de cada algoritmo:
+Archivo: metrics/examples/processes_random.txt
 
+**Métricas Promedio:**
 
-Execution order:
-![alt text](img/imagea.png)
-![alt text](img/image-1a.png)
-## Conclusions
+| Métrica | MLQ | MLFQ |
+|---------|-----|------|
+| Tiempo de Espera | 2578.28 | 2971.02 |
+| Tiempo de Retorno | 2627.42 | 3020.16 |
+| Tiempo de Respuesta | 1895.50 | 383.06 |
 
-### Performance Trade-offs
+![texto alternativo](img/imageaa.png)
 
-**MLFQ** starts new processes quickly but takes longer to complete all processes overall.
-
-**MLQ** completes more processes in less total time but may make some processes wait longer before starting.
-
-### Use MLFQ when:
-- Interactive/responsive systems are priority
-- Short processes need quick response times
-- Preventing starvation is critical
-- User experience matters more than total completion time
-
-### Use MLQ when:
-- Process priorities are well-defined
-- Throughput is more important than response time
-- High-priority processes need guaranteed performance
-- System is used for batch processing rather than interactive tasks
+**Hallazgos Clave:**
+- **MLFQ sobresale en tiempo de respuesta** (383.06 vs 11895.50) - significativamente mejor para procesos interactivos
+- **MLQ sobresale en tiempos de espera/retorno** - mejor para procesamiento por lotes
+- El mecanismo de envejecimiento de MLFQ previene la inanición pero la degradación aumenta el tiempo de espera general
+- La orientación por prioridad de MLQ ayuda a que los procesos largos de alta prioridad tengan mejores métricas
 
 
-## References
+![texto alternativo](img/image-2a.png)
+![alt text](img/image2a.png)
+![alt text](img/image-12a.png)
+
+![texto alternativo](img/image-3a.png)
+
+
+Orden de ejecución:
+![texto alternativo](img/imagea.png)
+![texto alternativo](img/image-1a.png)
+## Conclusiones
+
+### Compensaciones de Rendimiento
+
+**MLFQ** inicia nuevos procesos rápidamente pero toma más tiempo para completar todos los procesos en general.
+
+**MLQ** completa más procesos en menos tiempo total pero puede hacer que algunos procesos esperen más antes de iniciar.
+
+### Usa MLFQ cuando:
+- Los sistemas interactivos/responsivos son prioridad
+- Los procesos cortos necesitan tiempos de respuesta rápidos
+- Prevenir la inanición es crítico
+- La experiencia del usuario importa más que el tiempo total de completación
+
+### Usa MLQ cuando:
+- Las prioridades de los procesos están bien definidas
+- El rendimiento es más importante que el tiempo de respuesta
+- Los procesos de alta prioridad necesitan rendimiento garantizado
+- El sistema se usa para procesamiento por lotes en lugar de tareas interactivas
+
+
+## Referencias
 
 Operating System Concepts 10th Ed "ABRAHAM SILBERSCHATZ PETER BAER GALVIN GREG GAGNE"
-
-
