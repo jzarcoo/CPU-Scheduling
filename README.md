@@ -17,7 +17,7 @@ Este planificador divide los procesos en tres colas basándose en sus niveles de
 - Los procesos de mayor prioridad pueden **interrumpir** a los de menor prioridad.
 
 #### Diseño: 
-- **Número de colas**: 3 colas por defecto (configurable)
+- **Número de colas**: 3 colas por defecto 
 - **Algoritmo de planificación para cada cola**: 
   - q0: Similar a Round-Robin con quantum de tiempo = 8 (degrada a q1 después de que expira el quantum)
   - q1: Similar a Round-Robin con quantum de tiempo = 16 (degrada a q2 después de que expira el quantum)
@@ -35,7 +35,7 @@ Este planificador divide los procesos en tres colas basándose en sus niveles de
 - El quantum para la cola $i$ es quantum_tiempo $\cdot (2^i)$, lo que significa que las colas de mayor prioridad tienen quantums más cortos.
 
 #### Diseño:
-- **Número de colas**: 3 colas por defecto (configurable)
+- **Número de colas**: 3 colas por defecto 
 - **Algoritmo de planificación para cada cola**: Round-Robin con quantums de tiempo que aumentan exponencialmente:
   - q0: Round-Robin con quantum de tiempo = 8 
   - q1: Round-Robin con quantum de tiempo = 16 
@@ -106,7 +106,7 @@ Orden de ejecución:
 
 ## Conjunto de Prueba 2: Conjunto Grande de Procesos Variados
 
-Analizar un conjunto de datos más grande con prioridades diversas (1-5), tiempos de llegada (0-200) y tiempos de ráfaga (1-100) revela las verdaderas fortalezas de cada algoritmo:
+Analizar un conjunto de datos más grande con prioridades diversas (1-5), tiempos de llegada (0-200) y burst time (1-100) revela las verdaderas fortalezas de cada algoritmo:
 Archivo: metrics/examples/processes_random.txt
 
 **Métricas Promedio:**
